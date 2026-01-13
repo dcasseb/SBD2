@@ -76,6 +76,8 @@ Thumbs.db
 # Project specific
 data/raw/*.csv
 data/processed/*.csv
+data_layer/raw/crime_data/*.csv
+!data_layer/raw/crime_data/README.md
 *.log
 outputs/figures/*.png
 outputs/figures/*.jpg
@@ -84,3 +86,10 @@ outputs/reports/*.pdf
 # Large files
 *.zip
 *.tar.gz
+
+# Airflow logs
+airflow/logs/*
+!airflow/logs/.gitkeep
+
+# Site
+site/

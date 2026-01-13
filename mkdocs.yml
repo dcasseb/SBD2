@@ -1,0 +1,77 @@
+site_name: SBD2 - Crime Data Pipeline
+site_description: Documentação do projeto de Engenharia de Dados - Crime Data from 2020 to Present
+site_author: SBD2 Team - UnB
+site_url: https://dcasseb.github.io/SBD2
+
+repo_name: dcasseb/SBD2
+repo_url: https://github.com/dcasseb/SBD2
+
+theme:
+  name: material
+  language: pt-BR
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Modo escuro
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Modo claro
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - admonition
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - def_list
+
+nav:
+  - Home: index.md
+  - Overview:
+    - Arquitetura: overview/arquitetura.md
+    - Tecnologias: overview/tecnologias.md
+    - Como Subir: overview/como-subir.md
+    - Pipelines: overview/pipelines.md
+    - Spark: overview/spark.md
+  - Dicionários:
+    - Crime Data: dictionaries/crime_data.md
+  - Modelagem:
+    - MER/DER: modeling/mer-der.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/dcasseb/SBD2
+
+copyright: Copyright &copy; 2026 SBD2 - UnB
