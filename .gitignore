@@ -86,6 +86,14 @@ outputs/reports/*.pdf
 # Large files
 *.zip
 *.tar.gz
+Crime_Data_from_2020_to_Present.csv
+*.csv
+!data_layer/raw/crime_data/README.md
+
+# Data files (Parquet)
+data/bronze/
+data/silver/
+data/gold/
 
 # Airflow logs
 airflow/logs/*
