@@ -21,6 +21,7 @@ x-airflow-common:
     - ./airflow/dags:/opt/airflow/dags
     - ./airflow/logs:/opt/airflow/logs
     - ./data_layer:/opt/airflow/data_layer
+    - "./Data Layer:/opt/airflow/Data Layer"
     - ./transformer:/opt/airflow/transformer
     - ./postgres:/opt/airflow/postgres
     - ./spark_config:/opt/airflow/spark_config
@@ -46,7 +47,10 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres/init_db.sh:/docker-entrypoint-initdb.d/01_init_db.sh
       - ./postgres/scripts:/docker-entrypoint-initdb.d/scripts
+      - "./Data Layer/gold/ddl.sql:/docker-entrypoint-initdb.d/scripts/04_gold_layer.sql"
+      - "./Data Layer/raw/silver/ddl.sql:/docker-entrypoint-initdb.d/scripts/03_silver_layer.sql"
       - ./Crime_Data_from_2020_to_Present.csv:/data/crime_data.csv
+      - "./Data Layer/raw/dados_brutos.csv:/data/dados_brutos.csv"
     ports:
       - "5432:5432"
     healthcheck:
@@ -110,7 +114,7 @@ services:
     user: "0:0"
 
   spark-master:
-    image: bitnami/spark:3.5
+    image: apache/spark:3.5.0
     container_name: sbd2_spark_master
     environment:
       - SPARK_MODE=master
@@ -122,10 +126,11 @@ services:
     volumes:
       - ./data_layer:/data
       - ./spark_config:/spark_config
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
     restart: always
 
   spark-worker:
-    image: bitnami/spark:3.5
+    image: apache/spark:3.5.0
     container_name: sbd2_spark_worker
     environment:
       - SPARK_MODE=worker
@@ -136,6 +141,7 @@ services:
       - spark-master
     volumes:
       - ./data_layer:/data
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     restart: always
 
   jupyter:
@@ -149,7 +155,9 @@ services:
     volumes:
       - ./notebooks:/home/jovyan/notebooks
       - ./data_layer:/home/jovyan/data_layer
+      - "./Data Layer:/home/jovyan/Data Layer"
       - ./transformer:/home/jovyan/transformer
+      - "./Data Layer/Transformer:/home/jovyan/Transformer"
       - ./src:/home/jovyan/src
     depends_on:
       - spark-master

@@ -1,6 +1,6 @@
 -- ============================================
 -- Consultas - Camada Gold
--- Crime Data Analytics
+-- Crime Data Analytics (PostgreSQL)
 -- ============================================
 
 -- ============================================
@@ -46,12 +46,12 @@ ORDER BY dd.year, dd.month;
 -- 4. Crimes por período do dia
 -- ============================================
 SELECT 
-    dt.period_name,
+    dt.period_of_day,
     dt.hour,
     COUNT(*) as total_crimes
 FROM gold.fato_crimes fc
 JOIN gold.dim_time dt ON fc.sk_time = dt.sk_time
-GROUP BY dt.period_name, dt.hour
+GROUP BY dt.period_of_day, dt.hour
 ORDER BY dt.hour;
 
 -- ============================================
@@ -110,12 +110,12 @@ LIMIT 20;
 -- 9. Mapa de calor - Crimes por localização
 -- ============================================
 SELECT 
-    ROUND(fc.latitude, 2) as lat_group,
-    ROUND(fc.longitude, 2) as lon_group,
+    ROUND(fc.latitude::numeric, 2) as lat_group,
+    ROUND(fc.longitude::numeric, 2) as lon_group,
     COUNT(*) as total_crimes
 FROM gold.fato_crimes fc
 WHERE fc.latitude IS NOT NULL AND fc.longitude IS NOT NULL
-GROUP BY ROUND(fc.latitude, 2), ROUND(fc.longitude, 2)
+GROUP BY ROUND(fc.latitude::numeric, 2), ROUND(fc.longitude::numeric, 2)
 ORDER BY total_crimes DESC;
 
 -- ============================================

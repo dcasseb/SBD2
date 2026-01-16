@@ -4,8 +4,8 @@
 Dataset de crimes reportados na cidade de Los Angeles, EUA, desde 2020 até o presente.
 
 ## Fonte
-- **Origem**: Los Angeles Open Data Portal
-- **URL**: https://data.lacity.org/
+- **Origem**: DATA.GOV
+- **URL**: https://catalog.data.gov/dataset/crime-data-from-2020-to-present
 - **Formato**: CSV
 - **Atualização**: Semanal
 
