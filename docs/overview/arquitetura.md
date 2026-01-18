@@ -12,11 +12,8 @@ flowchart TB
         CSV[Crime Data CSV]
     end
     
-    subgraph Ingestion["🔄 Ingestão"]
-        Airflow[Apache Airflow]
-    end
-    
     subgraph Processing["⚙️ Processamento"]
+        Jupyter[Jupyter Notebooks]
         Spark[Apache Spark]
     end
     
@@ -30,17 +27,15 @@ flowchart TB
     end
     
     subgraph Consumption["📊 Consumo"]
-        Jupyter[Jupyter Notebooks]
         Dashboards[Dashboards]
     end
     
-    CSV --> Airflow
-    Airflow --> Spark
+    CSV --> Jupyter
+    Jupyter --> Spark
     Spark --> Bronze
     Bronze --> Silver
     Silver --> Gold
     Gold --> Postgres
-    Postgres --> Jupyter
     Postgres --> Dashboards
 ```
 
@@ -73,13 +68,13 @@ flowchart TB
 
 ## 🔌 Componentes
 
-### Apache Airflow
-- **Papel**: Orquestração de pipelines
-- **DAGs**:
-    - `crime_data_pipeline` - Pipeline principal
-    - `bronze_to_silver` - ETL Bronze → Silver
-    - `silver_to_gold` - ETL Silver → Gold
-    - `crime_analysis` - Geração de análises
+### Jupyter Notebooks
+- **Papel**: Execução dos pipelines ETL e análises
+- **Notebooks**:
+    - `01_etl_raw_bronze.ipynb` - ETL Raw → Bronze
+    - `02_bronze_to_silver.ipynb` - ETL Bronze → Silver
+    - `03_silver_to_gold.ipynb` - ETL Silver → Gold
+    - `04_data_analysis.ipynb` - Análises e visualizações
 
 ### Apache Spark
 - **Papel**: Processamento distribuído
@@ -98,8 +93,6 @@ flowchart TB
 - **Papel**: Containerização
 - **Serviços**:
     - `postgres`
-    - `airflow-webserver`
-    - `airflow-scheduler`
     - `spark-master`
     - `spark-worker`
     - `jupyter`
@@ -108,14 +101,12 @@ flowchart TB
 
 ```
 SBD2/
-├── airflow/
-│   ├── dags/           # DAGs do Airflow
-│   └── logs/           # Logs de execução
 ├── data_layer/
 │   ├── raw/            # Camada Bronze
 │   ├── silver/         # Camada Silver
 │   └── gold/           # Camada Gold
 ├── docs/               # Documentação MkDocs
+├── notebooks/          # Notebooks de ETL e análise
 ├── postgres/           # Configurações PostgreSQL
 ├── spark_config/       # Configurações Spark
 ├── transformer/        # Jobs ETL (notebooks)

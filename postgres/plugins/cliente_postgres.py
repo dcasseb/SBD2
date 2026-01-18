@@ -1,11 +1,9 @@
 """
-Cliente PostgreSQL para Airflow
-Plugin para facilitar operações com banco de dados nas DAGs
+Cliente PostgreSQL
+Plugin para facilitar operações com banco de dados
 """
 
-from airflow.hooks.base import BaseHook
-from airflow.models import BaseOperator
-from airflow.utils.decorators import apply_defaults
+import os
 import psycopg2
 from psycopg2.extras import execute_values
 import pandas as pd
@@ -15,20 +13,28 @@ from typing import List, Dict, Any
 class CrimeDataPostgresClient:
     """Cliente especializado para o banco de dados de crimes"""
     
-    def __init__(self, conn_id: str = 'postgres_crime_data'):
-        self.conn_id = conn_id
+    def __init__(self, 
+                 host: str = None,
+                 port: int = None,
+                 user: str = None,
+                 password: str = None,
+                 database: str = None):
+        self.host = host or os.environ.get('POSTGRES_HOST', 'localhost')
+        self.port = port or int(os.environ.get('POSTGRES_PORT', 5432))
+        self.user = user or os.environ.get('POSTGRES_USER', 'sbd2')
+        self.password = password or os.environ.get('POSTGRES_PASSWORD', 'sbd2_password')
+        self.database = database or os.environ.get('POSTGRES_DB', 'crime_data')
         self._conn = None
     
     def get_connection(self):
-        """Obtém conexão do Airflow"""
+        """Obtém conexão com PostgreSQL"""
         if self._conn is None:
-            conn_params = BaseHook.get_connection(self.conn_id)
             self._conn = psycopg2.connect(
-                host=conn_params.host,
-                port=conn_params.port,
-                user=conn_params.login,
-                password=conn_params.password,
-                database=conn_params.schema
+                host=self.host,
+                port=self.port,
+                user=self.user,
+                password=self.password,
+                database=self.database
             )
         return self._conn
     
@@ -125,28 +131,13 @@ class CrimeDataPostgresClient:
         return True
 
 
-class LoadDimensionOperator(BaseOperator):
-    """Operador customizado para carregar dimensões"""
+def load_dimension_from_csv(csv_path: str, table_name: str, key_column: str, **conn_kwargs):
+    """Função helper para carregar dimensão a partir de CSV"""
+    client = CrimeDataPostgresClient(**conn_kwargs)
+    df = pd.read_csv(csv_path)
     
-    @apply_defaults
-    def __init__(self,
-                 csv_path: str,
-                 table_name: str,
-                 key_column: str,
-                 conn_id: str = 'postgres_crime_data',
-                 *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.csv_path = csv_path
-        self.table_name = table_name
-        self.key_column = key_column
-        self.conn_id = conn_id
+    count = client.load_dimension(df, table_name, key_column)
+    client.close()
     
-    def execute(self, context):
-        client = CrimeDataPostgresClient(self.conn_id)
-        df = pd.read_csv(self.csv_path)
-        
-        count = client.load_dimension(df, self.table_name, self.key_column)
-        client.close()
-        
-        self.log.info(f"Carregados {count} registros em {self.table_name}")
-        return count
+    print(f"Carregados {count} registros em {table_name}")
+    return count

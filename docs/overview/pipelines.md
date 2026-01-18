@@ -2,13 +2,13 @@
 
 ## 🔄 Visão Geral
 
-O projeto possui 4 DAGs (Directed Acyclic Graphs) no Apache Airflow:
+O projeto possui notebooks Jupyter para processamento dos dados seguindo a arquitetura Medallion:
 
 ```mermaid
 flowchart TB
-    A[crime_data_pipeline] --> B[bronze_to_silver]
-    B --> C[silver_to_gold]
-    C --> D[crime_analysis]
+    A[01_etl_raw_bronze] --> B[02_bronze_to_silver]
+    B --> C[03_silver_to_gold]
+    C --> D[04_data_analysis]
     
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style B fill:#bbf,stroke:#333,stroke-width:2px
@@ -16,23 +16,15 @@ flowchart TB
     style D fill:#fbb,stroke:#333,stroke-width:2px
 ```
 
-## 📋 Descrição das DAGs
+## 📋 Descrição dos Notebooks
 
-### 1. crime_data_pipeline (Principal)
+### 1. 01_etl_raw_bronze.ipynb
 
-**Frequência**: Semanal (`@weekly`)
+**Descrição**: Carrega os dados brutos (CSV) para a camada Bronze.
 
-DAG orquestradora que dispara as demais DAGs em sequência.
+### 2. 02_bronze_to_silver.ipynb
 
-```python
-start >> bronze_to_silver >> silver_to_gold >> crime_analysis >> end
-```
-
-### 2. bronze_to_silver
-
-**Frequência**: Sob demanda
-
-Transforma dados brutos para a camada Silver.
+**Descrição**: Transforma dados brutos para a camada Silver.
 
 ```mermaid
 flowchart LR
@@ -41,20 +33,18 @@ flowchart LR
     C --> D[create_dimensions]
 ```
 
-#### Tasks:
+#### Etapas:
 
-| Task | Descrição |
+| Etapa | Descrição |
 |------|-----------|
 | `load_raw_data` | Carrega CSV bruto |
 | `clean_data` | Limpa valores nulos e inválidos |
 | `create_features` | Cria features derivadas |
 | `create_dimensions` | Gera tabelas de dimensão |
 
-### 3. silver_to_gold
+### 3. 03_silver_to_gold.ipynb
 
-**Frequência**: Sob demanda
-
-Transforma dados Silver para Data Mart (Gold).
+**Descrição**: Transforma dados Silver para Data Mart (Gold).
 
 ```mermaid
 flowchart LR
@@ -64,19 +54,17 @@ flowchart LR
     C --> D
 ```
 
-#### Tasks:
+#### Etapas:
 
-| Task | Descrição |
+| Etapa | Descrição |
 |------|-----------|
 | `create_aggregations` | Cria tabelas agregadas |
 | `load_to_postgres` | Carrega dimensões no PostgreSQL |
 | `create_summary_report` | Gera relatório JSON |
 
-### 4. crime_analysis
+### 4. 04_data_analysis.ipynb
 
-**Frequência**: Sob demanda
-
-Gera visualizações e análises.
+**Descrição**: Gera visualizações e análises.
 
 ```mermaid
 flowchart LR
@@ -88,13 +76,25 @@ flowchart LR
     D --> E
 ```
 
-#### Tasks:
+#### Análises:
 
-| Task | Descrição |
-|------|-----------|
-| `generate_temporal_charts` | Gráficos temporais |
-| `generate_geographic_charts` | Gráficos geográficos |
-| `generate_victim_charts` | Gráficos de perfil de vítimas |
+| Análise | Descrição |
+|---------|-----------|
+| `temporal_charts` | Gráficos temporais |
+| `geographic_charts` | Gráficos geográficos |
+| `victim_charts` | Gráficos de perfil de vítimas |
+
+## 🚀 Executando os Notebooks
+
+### Via Jupyter Lab
+
+1. Acesse http://localhost:8888
+2. Navegue até a pasta `notebooks/`
+3. Execute os notebooks na ordem:
+   - `01_etl_raw_bronze.ipynb`
+   - `02_bronze_to_silver.ipynb`
+   - `03_silver_to_gold.ipynb`
+   - `04_data_analysis.ipynb`
 
 ## 🔧 Configurações
 
@@ -112,13 +112,13 @@ flowchart LR
 
 | Caminho | Descrição |
 |---------|-----------|
-| `/opt/airflow/data_layer/raw` | Dados brutos |
-| `/opt/airflow/data_layer/silver` | Dados limpos |
-| `/opt/airflow/data_layer/gold` | Data Mart |
+| `/home/jovyan/data_layer/raw` | Dados brutos |
+| `/home/jovyan/data_layer/silver` | Dados limpos |
+| `/home/jovyan/data_layer/gold` | Data Mart |
 
 ## 📊 Métricas
 
-As DAGs geram métricas que são armazenadas via XCom:
+Os notebooks geram métricas durante a execução:
 
 - `raw_count`: Total de registros brutos
 - `clean_count`: Total após limpeza
@@ -126,19 +126,9 @@ As DAGs geram métricas que são armazenadas via XCom:
 
 ## 🔍 Monitoramento
 
-### Via Interface Airflow
+### Via Jupyter Lab
 
-1. Acesse http://localhost:8080
-2. Navegue para a DAG desejada
-3. Clique em "Graph" para ver o fluxo
-4. Clique em uma task para ver logs
-
-### Via Linha de Comando
-
-```bash
-# Listar execuções
-airflow dags list-runs -d crime_data_pipeline
-
-# Ver logs de uma task
-airflow tasks logs bronze_to_silver clean_data 2024-01-01
-```
+1. Acesse http://localhost:8888
+2. Navegue até o notebook desejado
+3. Execute as células para visualizar o progresso
+4. Verifique os outputs para logs e métricas

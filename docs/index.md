@@ -39,11 +39,10 @@ graph LR
 
 | Componente | Tecnologia | Descrição |
 |------------|------------|-----------|
-| Orquestração | Apache Airflow | Pipelines ETL automatizados |
 | Processamento | Apache Spark | Processamento distribuído |
 | Banco de Dados | PostgreSQL | Armazenamento estruturado |
 | Containerização | Docker | Ambiente isolado e reproduzível |
-| Notebooks | Jupyter | Análise exploratória |
+| Notebooks | Jupyter | Pipelines ETL e análise exploratória |
 
 ## 🚀 Quick Start
 
@@ -56,7 +55,6 @@ cd SBD2
 make init
 
 # Acesse os serviços
-# Airflow: http://localhost:8080 (admin/admin)
 # Spark:   http://localhost:8081
 # Jupyter: http://localhost:8888
 ```

@@ -1,4 +1,4 @@
-FROM apache/airflow:2.8.0-python3.11
+FROM jupyter/pyspark-notebook:latest
 
 USER root
 
@@ -6,20 +6,15 @@ USER root
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
-    openjdk-17-jdk-headless \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Configurar JAVA_HOME para PySpark
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-ENV PATH="${JAVA_HOME}/bin:${PATH}"
-
-USER airflow
+USER jovyan
 
 # Instalar dependências Python
-COPY requirements.txt /requirements.txt
-RUN pip install --no-cache-dir -r /requirements.txt
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 # Copiar código fonte
-COPY --chown=airflow:root src/ /opt/airflow/src/
-COPY --chown=airflow:root spark_config/ /opt/airflow/spark_config/
+COPY src/ /home/jovyan/src/
+COPY spark_config/ /home/jovyan/spark_config/

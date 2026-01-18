@@ -1,4 +1,4 @@
-.PHONY: help build up down restart logs shell clean init-airflow
+.PHONY: help build up down restart logs shell clean
 
 # Variáveis
 COMPOSE = docker-compose
@@ -24,20 +24,20 @@ restart: down up ## Reinicia todos os serviços
 logs: ## Mostra logs de todos os serviços
 	$(COMPOSE) logs -f
 
-logs-airflow: ## Mostra logs do Airflow
-	$(COMPOSE) logs -f airflow-webserver airflow-scheduler
-
 logs-spark: ## Mostra logs do Spark
 	$(COMPOSE) logs -f spark-master spark-worker
 
-shell-airflow: ## Acessa shell do container Airflow
-	$(COMPOSE) exec airflow-webserver bash
+logs-jupyter: ## Mostra logs do Jupyter
+	$(COMPOSE) logs -f jupyter
 
 shell-postgres: ## Acessa shell do PostgreSQL
-	$(COMPOSE) exec postgres psql -U airflow -d airflow
+	$(COMPOSE) exec postgres psql -U sbd2 -d crime_data
 
 shell-spark: ## Acessa shell do Spark
 	$(COMPOSE) exec spark-master spark-shell
+
+shell-jupyter: ## Acessa shell do Jupyter
+	$(COMPOSE) exec jupyter bash
 
 clean: ## Remove containers, volumes e imagens
 	$(COMPOSE) down -v --rmi local
@@ -51,20 +51,13 @@ init: build up ## Inicializa o projeto (build + up)
 	@echo "SBD2 - Crime Data Pipeline iniciado!"
 	@echo "============================================"
 	@echo ""
-	@echo "Airflow UI:    http://localhost:8080 (admin/admin)"
 	@echo "Spark UI:      http://localhost:8081"
 	@echo "Jupyter Lab:   http://localhost:8888"
 	@echo "PostgreSQL:    localhost:5432"
 	@echo ""
 
-trigger-pipeline: ## Dispara o pipeline completo
-	$(COMPOSE) exec airflow-webserver airflow dags trigger crime_data_pipeline
-
 status: ## Mostra status dos serviços
 	$(COMPOSE) ps
-
-test: ## Executa testes
-	$(COMPOSE) exec airflow-webserver pytest /opt/airflow/tests/
 
 docs-serve: ## Inicia servidor de documentação
 	cd docs && mkdocs serve

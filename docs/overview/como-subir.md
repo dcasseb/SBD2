@@ -56,7 +56,6 @@ docker-compose logs -f
 
 | Serviço | URL | Credenciais |
 |---------|-----|-------------|
-| **Airflow** | http://localhost:8080 | admin / admin |
 | **Spark UI** | http://localhost:8081 | - |
 | **Jupyter** | http://localhost:8888 | Token no log |
 | **PostgreSQL** | localhost:5432 | sbd2 / sbd2_password |
@@ -74,15 +73,20 @@ make restart
 # ou
 docker-compose restart
 
-# Ver logs do Airflow
-make logs-airflow
+# Ver logs do Jupyter
+make logs-jupyter
 # ou
-docker-compose logs -f airflow-webserver airflow-scheduler
+docker-compose logs -f jupyter
 
-# Acessar shell do Airflow
-make shell-airflow
+# Ver logs do Spark
+make logs-spark
 # ou
-docker-compose exec airflow-webserver bash
+docker-compose logs -f spark-master spark-worker
+
+# Acessar shell do Jupyter
+make shell-jupyter
+# ou
+docker-compose exec jupyter bash
 
 # Acessar PostgreSQL
 make shell-postgres
@@ -97,25 +101,25 @@ docker-compose down -v --rmi local
 
 ## ▶️ Executando o Pipeline
 
-### Via Interface Web (Airflow)
+### Via Jupyter Lab
 
-1. Acesse http://localhost:8080
-2. Faça login com admin/admin
-3. Na lista de DAGs, encontre `crime_data_pipeline`
-4. Clique no toggle para habilitar a DAG
-5. Clique no botão "Play" para executar
+1. Acesse http://localhost:8888
+2. Use o token exibido no log do container
+3. Navegue até a pasta `notebooks/`
+4. Execute os notebooks na ordem:
+   - `01_etl_raw_bronze.ipynb`
+   - `02_bronze_to_silver.ipynb`
+   - `03_silver_to_gold.ipynb`
+   - `04_data_analysis.ipynb`
 
 ### Via Linha de Comando
 
 ```bash
-# Acessar container do Airflow
-docker-compose exec airflow-webserver bash
+# Acessar container do Jupyter
+docker-compose exec jupyter bash
 
-# Disparar pipeline
-airflow dags trigger crime_data_pipeline
-
-# Verificar status
-airflow dags list-runs -d crime_data_pipeline
+# Executar notebook via linha de comando
+jupyter nbconvert --execute --to notebook notebooks/01_etl_raw_bronze.ipynb
 ```
 
 ## 🔧 Troubleshooting
@@ -128,16 +132,6 @@ docker-compose logs <service_name>
 
 # Verificar recursos disponíveis
 docker system df
-```
-
-### Airflow não conecta ao PostgreSQL
-
-```bash
-# Verificar se PostgreSQL está rodando
-docker-compose ps postgres
-
-# Reiniciar Airflow
-docker-compose restart airflow-webserver airflow-scheduler
 ```
 
 ### Spark sem memória

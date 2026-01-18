@@ -2,11 +2,10 @@
 
 ## 🛠️ Stack Tecnológico
 
-### Orquestração
+### Containerização
 
 | Tecnologia | Versão | Uso |
 |------------|--------|-----|
-| **Apache Airflow** | 2.8.0 | Orquestração de pipelines ETL |
 | **Docker** | 24.x | Containerização |
 | **Docker Compose** | 2.x | Orquestração de containers |
 
@@ -54,12 +53,12 @@
 
 ## 📊 Justificativas
 
-### Por que Apache Airflow?
+### Por que Jupyter Notebooks?
 
-- ✅ Padrão de mercado para orquestração
-- ✅ Interface web para monitoramento
-- ✅ Suporte a dependências entre tarefas
-- ✅ Fácil integração com Spark e PostgreSQL
+- ✅ Interface interativa para exploração de dados
+- ✅ Facilidade de documentação junto ao código
+- ✅ Integração nativa com PySpark
+- ✅ Ideal para análise e desenvolvimento de pipelines
 
 ### Por que Apache Spark?
 

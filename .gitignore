@@ -95,9 +95,5 @@ data/bronze/
 data/silver/
 data/gold/
 
-# Airflow logs
-airflow/logs/*
-!airflow/logs/.gitkeep
-
 # Site
 site/
