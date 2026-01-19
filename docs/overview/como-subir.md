@@ -1,6 +1,6 @@
 # Como Subir o Projeto
 
-## 📋 Pré-requisitos
+## Pré-requisitos
 
 - **Docker** 24.x ou superior
 - **Docker Compose** 2.x ou superior
@@ -8,7 +8,7 @@
 - **Make** (opcional, para usar comandos do Makefile)
 - **8GB+ RAM** (recomendado para Spark)
 
-## 🚀 Instalação Rápida
+## Instalação Rápida
 
 ### 1. Clone o Repositório
 
@@ -52,7 +52,7 @@ docker-compose ps
 docker-compose logs -f
 ```
 
-## 🌐 Acessando os Serviços
+## Acessando os Serviços
 
 | Serviço | URL | Credenciais |
 |---------|-----|-------------|
@@ -60,7 +60,7 @@ docker-compose logs -f
 | **Jupyter** | http://localhost:8888 | Token no log |
 | **PostgreSQL** | localhost:5432 | sbd2 / sbd2_password |
 
-## 📦 Comandos Úteis
+## Comandos Úteis
 
 ```bash
 # Parar serviços
@@ -99,7 +99,7 @@ make clean
 docker-compose down -v --rmi local
 ```
 
-## ▶️ Executando o Pipeline
+## Executando o Pipeline
 
 ### Via Jupyter Lab
 
@@ -122,7 +122,7 @@ docker-compose exec jupyter bash
 jupyter nbconvert --execute --to notebook notebooks/01_etl_raw_bronze.ipynb
 ```
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Container não inicia
 

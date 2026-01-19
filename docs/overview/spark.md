@@ -1,10 +1,10 @@
 # Apache Spark
 
-## ⚡ Configuração do Spark
+## Configuração do Spark
 
 O projeto utiliza Apache Spark 3.5 para processamento distribuído de dados.
 
-## 🏗️ Arquitetura Spark
+## Arquitetura Spark
 
 ```mermaid
 flowchart TB
@@ -22,7 +22,7 @@ flowchart TB
     Jobs --> Master
 ```
 
-## ⚙️ Configurações
+## Configurações
 
 ### Arquivo de Configuração
 
@@ -46,7 +46,7 @@ conf.set("spark.sql.adaptive.enabled", "true")
 | `SPARK_DRIVER_MEMORY` | Memória do driver | 2g |
 | `SPARK_EXECUTOR_MEMORY` | Memória do executor | 2g |
 
-## 📓 Jobs ETL
+## Jobs ETL
 
 ### Bronze → Silver
 
@@ -74,7 +74,7 @@ agg_area_year = df_silver \
     )
 ```
 
-## 🔌 Integração com PostgreSQL
+## Integração com PostgreSQL
 
 ```python
 # Configuração JDBC
@@ -90,7 +90,7 @@ df.write \
     .jdbc(jdbc_url, "gold.dim_area", mode="overwrite", properties=properties)
 ```
 
-## 📊 Formatos de Dados
+## Formatos de Dados
 
 ### Parquet (Recomendado)
 
@@ -121,7 +121,7 @@ df.write \
     .csv("/data/export/crimes")
 ```
 
-## 🔍 Monitoramento
+## Monitoramento
 
 ### Spark UI
 
@@ -142,7 +142,7 @@ docker-compose logs -f spark-master spark-worker
 # Applications → Logs
 ```
 
-## 🚀 Otimizações
+## Otimizações
 
 ### Particionamento
 

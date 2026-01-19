@@ -1,6 +1,6 @@
 # Tecnologias Utilizadas
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 ### Containerização
 
@@ -51,39 +51,39 @@
 |------------|--------|-----|
 | **GitHub Actions** | - | Integração contínua |
 
-## 📊 Justificativas
+## Justificativas
 
 ### Por que Jupyter Notebooks?
 
-- ✅ Interface interativa para exploração de dados
-- ✅ Facilidade de documentação junto ao código
-- ✅ Integração nativa com PySpark
-- ✅ Ideal para análise e desenvolvimento de pipelines
+- Interface interativa para exploração de dados
+- Facilidade de documentação junto ao código
+- Integração nativa com PySpark
+- Ideal para análise e desenvolvimento de pipelines
 
 ### Por que Apache Spark?
 
-- ✅ Processamento distribuído escalável
-- ✅ Suporte a SQL e DataFrames
-- ✅ Otimizado para grandes volumes de dados
-- ✅ Integração nativa com Parquet
+- Processamento distribuído escalável
+- Suporte a SQL e DataFrames
+- Otimizado para grandes volumes de dados
+- Integração nativa com Parquet
 
 ### Por que PostgreSQL?
 
-- ✅ Banco de dados robusto e confiável
-- ✅ Suporte a tipos de dados avançados
-- ✅ Extensões para dados geográficos (PostGIS)
-- ✅ Amplamente utilizado em produção
+- Banco de dados robusto e confiável
+- Suporte a tipos de dados avançados
+- Extensões para dados geográficos (PostGIS)
+- Amplamente utilizado em produção
 
 ### Por que Docker?
 
-- ✅ Ambiente reproduzível
-- ✅ Isolamento de dependências
-- ✅ Fácil deploy e escalabilidade
-- ✅ Documentação como código
+- Ambiente reproduzível
+- Isolamento de dependências
+- Fácil deploy e escalabilidade
+- Documentação como código
 
 ### Por que Parquet?
 
-- ✅ Formato colunar otimizado
-- ✅ Compressão eficiente
-- ✅ Schema evolution
-- ✅ Particionamento nativo
+- Formato colunar otimizado
+- Compressão eficiente
+- Schema evolution
+- Particionamento nativo

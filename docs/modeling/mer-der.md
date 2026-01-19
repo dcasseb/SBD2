@@ -1,10 +1,10 @@
-# Modelagem de Dados - MER/DER
+# Modelagem de Dados - MER/DER/DLD
 
-## 📊 Modelo Conceitual
+## Modelo Conceitual
 
 O modelo dimensional segue o padrão **Star Schema**, otimizado para consultas analíticas.
 
-## 🌟 Star Schema
+## Star Schema
 
 ```mermaid
 erDiagram
@@ -90,7 +90,7 @@ erDiagram
     }
 ```
 
-## 📋 Descrição das Tabelas
+## Descrição das Tabelas
 
 ### Tabela Fato
 
@@ -175,7 +175,7 @@ Perfil demográfico das vítimas.
 | descent | CHAR | Descendência (código) |
 | descent_description | VARCHAR | Descendência (descrição) |
 
-## 📈 Tabelas de Agregação
+## Tabelas de Agregação
 
 Para otimizar consultas frequentes:
 
@@ -185,7 +185,7 @@ Para otimizar consultas frequentes:
 | `agg_crimes_type_year` | Crimes por tipo e ano |
 | `agg_crime_hotspots` | Hotspots geográficos |
 
-## 🔍 Consultas Exemplo
+## Consultas Exemplo
 
 ### Total de crimes por área
 
