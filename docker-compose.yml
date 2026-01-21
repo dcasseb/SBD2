@@ -7,11 +7,17 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-crime_data}
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-sbd2}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sbd2_password}
       TZ: ${TZ:-UTC}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./postgres/scripts:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sbd2 -d crime_data"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

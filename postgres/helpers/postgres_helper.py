@@ -25,9 +25,9 @@ class PostgresHelper:
         """
         self.host = host or os.getenv('POSTGRES_HOST', 'localhost')
         self.port = port or int(os.getenv('POSTGRES_PORT', 5432))
-        self.user = user or os.getenv('SBD2_POSTGRES_USER', 'sbd2')
-        self.password = password or os.getenv('SBD2_POSTGRES_PASSWORD', 'sbd2_password')
-        self.database = database or os.getenv('SBD2_POSTGRES_DB', 'crime_data')
+        self.user = user or os.getenv('POSTGRES_USER', 'sbd2')
+        self.password = password or os.getenv('POSTGRES_PASSWORD', 'sbd2_password')
+        self.database = database or os.getenv('POSTGRES_DB', 'crime_data')
     
     @contextmanager
     def get_connection(self):

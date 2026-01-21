@@ -26,26 +26,28 @@ CREATE TABLE IF NOT EXISTS gold.dim_date (
 -- Dimensão: Tempo
 CREATE TABLE IF NOT EXISTS gold.dim_time (
     sk_time SERIAL PRIMARY KEY,
-    hour INTEGER NOT NULL UNIQUE,
+    full_time TIME NOT NULL UNIQUE,
+    hour INTEGER NOT NULL,
+    minute INTEGER DEFAULT 0,
     period_of_day VARCHAR(20) NOT NULL,
-    is_rush_hour BOOLEAN NOT NULL,
-    time_range VARCHAR(20) NOT NULL
+    is_rush_hour BOOLEAN NOT NULL
 );
 
 -- Popular dim_time
-INSERT INTO gold.dim_time (hour, period_of_day, is_rush_hour, time_range)
+INSERT INTO gold.dim_time (full_time, hour, minute, period_of_day, is_rush_hour)
 SELECT 
+    (LPAD(h::text, 2, '0') || ':00:00')::TIME,
     h,
+    0,
     CASE 
         WHEN h >= 6 AND h < 12 THEN 'Manhã'
         WHEN h >= 12 AND h < 18 THEN 'Tarde'
         WHEN h >= 18 AND h < 24 THEN 'Noite'
         ELSE 'Madrugada'
     END,
-    h IN (7, 8, 9, 17, 18, 19),
-    LPAD(h::text, 2, '0') || ':00-' || LPAD(((h+1) % 24)::text, 2, '0') || ':00'
+    h IN (7, 8, 9, 17, 18, 19)
 FROM generate_series(0, 23) AS h
-ON CONFLICT (hour) DO NOTHING;
+ON CONFLICT (full_time) DO NOTHING;
 
 -- Dimensão: Área
 CREATE TABLE IF NOT EXISTS gold.dim_area (
@@ -90,11 +92,10 @@ CREATE TABLE IF NOT EXISTS gold.dim_premise (
 );
 
 -- Dimensão: Perfil da Vítima
-CREATE TABLE IF NOT EXISTS gold.dim_victim_profile (
-    sk_victim_profile SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS gold.dim_victim (
+    sk_victim SERIAL PRIMARY KEY,
     age_group VARCHAR(20) NOT NULL,
     sex CHAR(1) NOT NULL,
-    sex_description VARCHAR(20),
     descent CHAR(1),
     descent_description VARCHAR(50),
     UNIQUE(age_group, sex, descent)
@@ -113,13 +114,11 @@ CREATE TABLE IF NOT EXISTS gold.fato_crimes (
     sk_crime_type INTEGER REFERENCES gold.dim_crime_type(sk_crime_type),
     sk_weapon INTEGER REFERENCES gold.dim_weapon(sk_weapon),
     sk_premise INTEGER REFERENCES gold.dim_premise(sk_premise),
-    sk_victim_profile INTEGER REFERENCES gold.dim_victim_profile(sk_victim_profile),
+    sk_victim INTEGER REFERENCES gold.dim_victim(sk_victim),
     -- Métricas e atributos
     latitude DECIMAL(10, 6),
     longitude DECIMAL(10, 6),
     is_violent BOOLEAN,
-    is_serious BOOLEAN,
-    victim_age INTEGER,
     -- Metadados
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -140,6 +139,19 @@ CREATE TABLE IF NOT EXISTS gold.agg_crimes_area_month (
     avg_victim_age DECIMAL(5,2),
     pct_violent DECIMAL(5,2),
     PRIMARY KEY (sk_area, year, month)
+);
+
+-- Agregação: Crimes por Área e Período (usado pelo ETL)
+CREATE TABLE IF NOT EXISTS gold.agg_crimes_area_period (
+    sk_area INTEGER,
+    year INTEGER NOT NULL,
+    month INTEGER NOT NULL,
+    period_of_day VARCHAR(20),
+    total_crimes INTEGER NOT NULL,
+    violent_crimes INTEGER DEFAULT 0,
+    property_crimes INTEGER DEFAULT 0,
+    avg_victim_age DECIMAL(5,2),
+    PRIMARY KEY (sk_area, year, month, period_of_day)
 );
 
 -- Agregação: Crimes por Tipo e Ano
